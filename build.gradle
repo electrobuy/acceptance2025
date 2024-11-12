@@ -1,0 +1,53 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.3.4'  // Version de Spring Boot
+    id 'io.spring.dependency-management' version '1.1.6'  // Version du gestionnaire de dépendances
+    id 'jacoco'//Application du plugin JaCoCo
+    id 'checkstyle'
+}
+
+group = 'com.aimenelbouanani'  // Nom du groupe
+version = '0.0.1-SNAPSHOT'  // Version du projet
+
+checkstyle {
+    toolVersion = '10.4' // Remplacez par la version souhaitée
+    configFile = file('config/checkstyle/checkstyle.xml')
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)  // Version de Java à utiliser
+    }
+}
+
+repositories {
+    mavenCentral()  // Dépôt Maven central pour les dépendances
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'  // Dépendance pour Spring Web
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'  // Dépendance pour les tests Spring
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'  // Dépendance pour JUnit 5
+    checkstyle 'com.puppycrawl.tools:checkstyle:10.4'
+    // For Cucumber, use a version compatible with older Gradle
+    testImplementation 'io.cucumber:cucumber-java:6.10.4'
+    testImplementation 'io.cucumber:cucumber-junit:6.10.4'
+
+    // JUnit 4.13.1 works well with older versions of Cucumber and Gradle
+    testImplementation 'junit:junit:4.13.1'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()  // Indique d'utiliser JUnit 5 pour les tests
+}
+
+jacocoTestCoverageVerification {
+violationRules {
+rule {
+limit {
+minimum = 0.2
+      }
+     }
+               }
+}
+check.dependsOn jacocoTestCoverageVerification
